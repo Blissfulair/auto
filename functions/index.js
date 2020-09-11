@@ -15,6 +15,7 @@ const app = express()
 app.use(cors({origin:true}))
 const db = admin.firestore();
 const auth = admin.auth();
+const google = new firebase.auth.GoogleAuthProvider()
 app.post('/register', (request,response)=>{
     (async()=>{
         try{
@@ -124,6 +125,23 @@ app.post('/login', (request , response)=>{
         }
         catch(err){
             return response.status(500).json({status:'internal server error',statusCode:500,message:'failed.'})
+        }
+    })()
+})
+
+app.post('/google', (request, response)=>{
+    (async()=>{
+        try{
+           const res = await firebase.auth().signInWithPopup(google);
+           console(res)
+           return response.status(200).json({
+               status:'success',
+               statusCode:200,
+               message:'Signed up successfully'
+           })
+        }
+        catch(err){
+            console.log(err)
         }
     })()
 })
